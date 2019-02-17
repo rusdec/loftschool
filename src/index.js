@@ -116,15 +116,15 @@ function calculator(number = 0) {
   }
 
   return {
-    sum: (...rest) => rest.reduce((accum, argument) => accum += argument, number),
-    dif: (...rest) => rest.reduce((accum, argument) => accum -= argument, number),
-    div: (...rest) => {
-      if (rest.some((argument) => argument === 0)) {
-        throw new Error('division by 0');
-      }
-      return rest.reduce((accum, argument) => accum /= argument, number)
-    },
-    mul: (...rest) => rest.reduce((accum, argument) => accum *= argument, number)
+    sum: (...rest) => rest.reduce((accum, argument) => accum + argument, number),
+    dif: (...rest) => rest.reduce((accum, argument) => accum - argument, number),
+    div: (...rest) => rest.reduce((accum, argument) => {
+        if (argument === 0) {
+          throw new Error('division by 0');
+        }
+        return accum / argument;
+      }, number),
+    mul: (...rest) => rest.reduce((accum, argument) => accum * argument, number)
   }
 }
 
