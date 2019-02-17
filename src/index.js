@@ -84,17 +84,13 @@ function returnBadArguments(fn, ...rest) {
     throw new Error('fn is not a function');
   }
 
-  let badArguments = [];
-
-  for(let argument of rest) {
+  return rest.filter((argument) => {
     try {
       fn(argument);
-    } catch(e) {
-      badArguments.push(argument);
+    } catch {
+      return argument;
     }
-  }
-
-  return badArguments;
+  });
 }
 
 /*
