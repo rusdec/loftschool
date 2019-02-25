@@ -1,4 +1,5 @@
 let webpack = require('webpack');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 let HtmlPlugin = require('html-webpack-plugin');
 let CleanWebpackPlugin = require('clean-webpack-plugin');
 let ExtractTextPlugin = require('extract-text-webpack-plugin');
@@ -27,14 +28,21 @@ module.exports = {
     },
     devtool: 'source-map',
     module: { rules },
+    optimization: {
+     minimizer: [
+       new UglifyJsPlugin({
+         cache: true,
+         parallel: true,
+         uglifyOptions: {
+           compress: false,
+           ecma: 6,
+           mangle: true
+         },
+         sourceMap: true
+       })
+      ]
+    },
     plugins: [
-        new webpack.optimize.UglifyJsPlugin({
-            sourceMap: true,
-            compress: {
-                drop_debugger: false,
-                warnings: false
-            }
-        }),
         new ExtractTextPlugin('styles.css'),
         new HtmlPlugin({
             title: 'Main Homework',
