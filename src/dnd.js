@@ -16,7 +16,6 @@
    homeworkContainer.appendChild(newDiv);
  */
 const homeworkContainer = document.querySelector('#homework-container');
-let dragable;
 
 /*
  Функция должна создавать и возвращать новый div с классом draggable-div и случайными размерами/цветом/позицией
@@ -52,9 +51,8 @@ function createDiv() {
   div.style.left  = `${position(width, window.innerWidth)}px`;
   div.style.top   = `${position(height, window.innerHeight)}px`;
   div.style.backgroundColor = randomColor;
-  div.draggable = true;
   div.dataset.color = div.style.backgroundColor;
-  div.style.position = 'fixed';
+  div.style.position = 'absolute';
   return div;
 }
 
@@ -67,24 +65,24 @@ function createDiv() {
    addListeners(newDiv);
  */
 function addListeners(target) {
-  target.addEventListener('dragstart', function(event) {
-    event.dataTransfer.effectAllowed = 'move';
-    event.dataTransfer.setData('text/html', event.target);
-    dragable = event.target;
-  }, false);
+  target.addEventListener('mousedown', (event) => {
+    let dragable = event.target;
+    let originZIndex = event.target.style.zIndex;
+    let limitLeft = event.pageX - Number.parseInt(dragable.style.left);
+    let limitTop  = event.pageY - Number.parseInt(dragable.style.top);
 
-  target.addEventListener('dragover', function(event) {
-    event.preventDefault();
-    event.dataTransfer.dropEffect = 'move';
-  }, false);
+    event.target.style.zIndex = 1000;
 
-  target.addEventListener('drop', function(event) {
-    event.dropEffect = 'move';
-    if (event.target !== dragable) {
-      event.target.appendChild(dragable);
-      dragable.style.position = 'sticky';
-    }
-  }, false);
+    document.onmousemove = function(event) {
+      dragable.style.left = `${event.pageX - limitLeft}px`;
+      dragable.style.top  = `${event.pageY - limitTop}px`;
+    };
+
+    document.onmouseup = function() {
+      document.onmousemove = null;
+      dragable.style.zIndex = originZIndex;
+    };
+  });
 }
 
 let addDivButton = homeworkContainer.querySelector('#addDiv');
