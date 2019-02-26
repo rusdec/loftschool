@@ -35,14 +35,10 @@ function createDiv() {
     return _position < 0 ? 0 : _position;
   };
   let randomColor = (() => {
-      let colorCode  = '#';
-      let colorChars = ['1','2','3','4','5',
-                        '6','7','8','9','0',
-                        'a','b','c','d','e','f'];
-      for(let i = 0; i < 6; i++) {
-        colorCode += colorChars[Math.floor(Math.random() * (colorChars.length - 1))]; 
-      }
-      return colorCode;
+    return Math.floor(Math.random() * Math.pow(256,3))
+            .toString(16)
+            .padStart(6, '0')
+            .padStart(7, '#')
   })();
 
   div.classList.add('draggable-div');
@@ -67,7 +63,6 @@ function createDiv() {
 function addListeners(target) {
   target.addEventListener('mousedown', (event) => {
     let dragable = event.target;
-    let originZIndex = event.target.style.zIndex;
     let limitLeft = event.pageX - Number.parseInt(dragable.style.left);
     let limitTop  = event.pageY - Number.parseInt(dragable.style.top);
 
@@ -80,7 +75,7 @@ function addListeners(target) {
 
     document.onmouseup = function() {
       document.onmousemove = null;
-      dragable.style.zIndex = originZIndex;
+      dragable.style.zIndex = null;
     };
   });
 }
