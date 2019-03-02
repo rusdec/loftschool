@@ -1,4 +1,5 @@
 import { assert } from 'chai';
+
 import { randomValue } from '../helper';
 import {
     createDivWithText,
@@ -37,7 +38,6 @@ describe('ДЗ 4 - Работа с DOM', () => {
 
             assert.equal(result.innerText, text);
         });
-    });
 
     describe('prepend', () => {
         it('должна добавлять элемент в начало', () => {
@@ -81,6 +81,7 @@ describe('ДЗ 4 - Работа с DOM', () => {
 
             assert.isTrue(Array.isArray(result));
             assert.deepEqual(result, [text1, text2]);
+
         });
     });
 
@@ -127,7 +128,6 @@ describe('ДЗ 4 - Работа с DOM', () => {
             result = collectDOMStat(where);
             assert.deepEqual(result, stat);
         });
-    });
 
     describe('observeChildNodes', () => {
         it('должна вызывать fn при добавлении элементов в указанный элемент', done => {
