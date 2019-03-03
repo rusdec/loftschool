@@ -1,108 +1,39 @@
-/* ДЗ 5 - DOM Events */
+/* ДЗ 6 - Асинхронность и работа с сетью */
 
 /*
  Задание 1:
 
- Функция должна добавлять обработчик fn события eventName к элементу target
+ Функция должна возвращать Promise, который должен быть разрешен через указанное количество секунду
 
  Пример:
-   addListener('click', document.querySelector('a'), () => console.log('...')) // должна добавить указанный обработчик кликов на указанный элемент
+   delayPromise(3) // вернет promise, который будет разрешен через 3 секунды
  */
-function addListener(eventName, target, fn) {
-  target.addEventListener(eventName, fn);
+function delayPromise(seconds) {
+  return new Promise(resolve => setTimeout(() => resolve(), seconds * 1000));
 }
 
 /*
  Задание 2:
 
- Функция должна удалять у элемента target обработчик fn события eventName
+ 2.1: Функция должна вернуть Promise, который должен быть разрешен с массивом городов в качестве значения
+
+ Массив городов пожно получить отправив асинхронный запрос по адресу
+ https://raw.githubusercontent.com/smelukov/citiesTest/master/cities.json
+
+ 2.2: Элементы полученного массива должны быть отсортированы по имени города
 
  Пример:
-   removeListener('click', document.querySelector('a'), someHandler) // должна удалить указанный обработчик кликов на указанный элемент
+   loadAndSortTowns().then(towns => console.log(towns)) // должна вывести в консоль отсортированный массив городов
  */
-function removeListener(eventName, target, fn) {
-  target.removeEventListener(eventName, fn);
-}
-
-/*
- Задание 3:
-
- Функция должна добавить к элементу target такой обработчик на события eventName, чтобы он отменял действия по умолчанию
-
- Пример:
-   skipDefault('click', document.querySelector('a')) // после вызова функции, клики на указанную ссылку не должны приводить к переходу на другую страницу
- */
-function skipDefault(eventName, target) {
-  target.addEventListener(eventName, event => event.preventDefault());
-}
-
-/*
- Задание 5:
-
- Функция должна перебрать все дочерние узлы элемента переданного в параметре where и удалить из него все текстовые узлы
-
- Задачу необходимо решить без использования рекурсии, то есть можно не уходить вглубь дерева.
- Так же будьте внимательны при удалении узлов, т.к. можно получить неожиданное поведение при переборе узлов
-
- Пример:
-   После выполнения функции, дерево <div></div>привет<p></p>loftchool!!!
-   должно быть преобразовано в <div></div><p></p>
- */
-function deleteTextNodes(where) {
-  for(let child of where.childNodes) {
-    if (child.nodeType === 3) {
-      child.remove();
-    }
-  }
-}
-
-/*
- Задание 6:
-
- Функция должна эмулировать событие click для элемента target
-
- Пример:
-   emulateClick(document.querySelector('a')) // для указанного элемента должно быть сэмулировано события click
- */
-function emulateClick(target) {
-  target.click();
-}
-
-/*
- Задание 5:
-
- Функция должна добавить такой обработчик кликов к элементу target,
- который реагирует (вызывает fn) только на клики по элементам BUTTON внутри target
-
- Пример:
-   delegate(document.body, () => console.log('кликнули на button')) // добавит такой обработчик кликов для body, который будет вызывать указанную функцию только если кликнули на кнопку (элемент с тегом button)
- */
-function delegate(target, fn) {
-  target.addEventListener('click', (event) => {
-    if (event.target.nodeName === 'BUTTON') {
-      fn(event.target);
-    }
+function loadAndSortTowns() {
+  return new Promise(resolve => {
+    fetch('https://raw.githubusercontent.com/smelukov/citiesTest/master/cities.json')
+      .then(response => response.json())
+      .then(towns => resolve(towns.sort((townA, townB) => townA.name > townB.name ? 1 : -1)));
   });
 }
 
-/*
- Задание 6:
-
- Функция должна добавить такой обработчик кликов к элементу target,
- который сработает только один раз и удалится (перестанет срабатывать для последующих кликов по указанному элементу)
-
- Пример:
-   once(document.querySelector('button'), () => console.log('обработчик выполнился!')) // добавит такой обработчик кликов для указанного элемента, который вызовется только один раз и затем удалится
- */
-function once(target, fn) {
-  target.addEventListener('click', event => fn(event.target), { once: true });
-}
-
 export {
-    addListener,
-    removeListener,
-    skipDefault,
-    emulateClick,
-    delegate,
-    once
+    delayPromise,
+    loadAndSortTowns
 };
