@@ -145,7 +145,9 @@ filterNameInput.addEventListener('keyup', function() {
 
 addButton.addEventListener('click', () => {
   // здесь можно обработать нажатие на кнопку "добавить cookie"
-  let cookie = new Cookie({name: addNameInput.value, value: addValueInput.value});
-  documentCookie.addCookie(cookie);
+  documentCookie.addCookie(new Cookie({
+    name: addNameInput.value,
+    value: addValueInput.value
+  }));
   cookieTable.filter()
 });
