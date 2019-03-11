@@ -70,6 +70,19 @@ class DocumentCookie {
   deleteCookie(cookie) {
     document.cookie = cookie.toDeletedString();
   }
+
+  getCookies() {
+    return document.cookie.split(';').reduce((cookies, cookie) => {
+      cookies.push(this._parseCookie(cookie));
+      return cookies;
+    }, []);
+  }
+
+  _parseCookie(cookie) {
+    let [name, ...value] = cookie.split('=');
+    value = value.join('=');
+    return new Cookie({name, value});
+  }
 }
 
 class CookieTable {
@@ -79,9 +92,9 @@ class CookieTable {
     this._ondeleteHandler = params.ondeleteHandler || function(){};
   }
 
-  filter() {
+  filter(cookies) {
     this._table.innerHTML = '';
-    this._getDocumentCookies().forEach((cookie) => {
+    cookies.forEach((cookie) => {
       if (this._isFilterPass(cookie)) {
         this._addCookie(cookie);
       }
@@ -114,18 +127,7 @@ class CookieTable {
   get _pattern() {
     return new RegExp(this._filter.value); 
   }
-  _getDocumentCookies() {
-    return document.cookie.split(';').reduce((cookies, cookie) => {
-      cookies.push(this._parseCookie(cookie));
-      return cookies;
-    }, []);
-  }
 
-  _parseCookie(cookie) {
-    let [name, ...value] = cookie.split('=');
-    value = value.join('=');
-    return new Cookie({name, value});
-  }
 }
 
 const documentCookie   = new DocumentCookie; 
@@ -135,11 +137,11 @@ const cookieTable      = new CookieTable({
   ondeleteHandler: (cookie) => documentCookie.deleteCookie(cookie)
 });
 
-cookieTable.filter();
+cookieTable.filter(documentCookie.getCookies());
 
 filterNameInput.addEventListener('keyup', function() {
   // здесь можно обработать нажатия на клавиши внутри текстового поля для фильтрации cookie
-  cookieTable.filter()
+  cookieTable.filter(documentCookie.getCookies())
 });
 
 
@@ -149,5 +151,8 @@ addButton.addEventListener('click', () => {
     name: addNameInput.value,
     value: addValueInput.value
   }));
-  cookieTable.filter()
+  cookieTable.filter(documentCookie.getCookies())
+
+  addNameInput.value  = '';
+  addValueInput.value = '';
 });
