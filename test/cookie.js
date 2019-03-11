@@ -37,6 +37,21 @@ describe('ДЗ 7.2 - Cookie editor', () => {
             }
         });
 
+        it('значение addNameInput и addValueInput должны сбрасываться после клика на кнопку "Добавить"', () => {
+            filterNameInput = homeworkContainer.querySelector('#filter-name-input');
+            addNameInput = homeworkContainer.querySelector('#add-name-input');
+            addValueInput = homeworkContainer.querySelector('#add-value-input');
+            addButton = homeworkContainer.querySelector('#add-button');
+            listTable = homeworkContainer.querySelector('#list-table tbody');
+
+            addNameInput.value = 'test-cookie-name-1';
+            addValueInput.value = 'test-cookie-value-1';
+            addButton.click();
+
+            assert(addNameInput.value === '', 'value элемента addNameInput должно сбрасываться');
+            assert(addValueInput.value === '', 'value элемента addValueInput должно сбрасываться');
+        });
+
         it('на старнице должны быть элементы с нужными id', () => {
             filterNameInput = homeworkContainer.querySelector('#filter-name-input');
             addNameInput = homeworkContainer.querySelector('#add-name-input');
@@ -57,15 +72,15 @@ describe('ДЗ 7.2 - Cookie editor', () => {
         });
 
         it('cookie должны добавляться при нажатии на "добавить"', () => {
-            let cookies;
+            let cookies, nameInput, valueInput;
 
-            addNameInput.value = 'test-cookie-name-1';
-            addValueInput.value = 'test-cookie-value-1';
+            addNameInput.value = nameInput = 'test-cookie-name-1';
+            addValueInput.value = valueInput = 'test-cookie-value-1';
             addButton.click();
 
             cookies = getCookies();
-            assert(cookies.hasOwnProperty(addNameInput.value), 'cookie не добавлена в барузер');
-            assert.equal(cookies[addNameInput.value], addValueInput.value, 'cookie не добавлена в барузер');
+            assert(cookies.hasOwnProperty(nameInput), 'cookie не добавлена в барузер');
+            assert.equal(cookies[nameInput], valueInput, 'cookie не добавлена в барузер');
             assert.equal(listTable.children.length, 1, 'cookie не добавлена в таблицу');
 
             addNameInput.value = 'test-cookie-name-2';
@@ -73,13 +88,13 @@ describe('ДЗ 7.2 - Cookie editor', () => {
             addButton.click();
 
             cookies = getCookies();
-            assert(cookies.hasOwnProperty(addNameInput.value), 'cookie не добавлена в барузер');
-            assert.equal(cookies[addNameInput.value], addValueInput.value, 'cookie не добавлена в барузер');
+            assert(cookies.hasOwnProperty(nameInput), 'cookie не добавлена в барузер');
+            assert.equal(cookies[nameInput], valueInput, 'cookie не добавлена в барузер');
             assert.equal(listTable.children.length, 2, 'cookie не добавлена в таблицу');
         });
 
         it('если при добавлении указано имя существующей cookie, то в таблице не должно быть дублей', () => {
-            let cookies;
+            let cookies, nameInput, valueInput;
 
             addNameInput.value = 'test-cookie-name-1';
             addValueInput.value = 'test-cookie-value-1';
@@ -89,13 +104,13 @@ describe('ДЗ 7.2 - Cookie editor', () => {
             addValueInput.value = 'test-cookie-value-2';
             addButton.click();
 
-            addNameInput.value = 'test-cookie-name-2';
-            addValueInput.value = 'test-cookie-value-2';
+            addNameInput.value = nameInput = 'test-cookie-name-2';
+            addValueInput.value = valueInput = 'test-cookie-value-2';
             addButton.click();
 
             cookies = getCookies();
-            assert(cookies.hasOwnProperty(addNameInput.value), 'cookie не добавлена в барузер');
-            assert.equal(cookies[addNameInput.value], addValueInput.value, 'не изменено значение cookie');
+            assert(cookies.hasOwnProperty(nameInput), 'cookie не добавлена в барузер');
+            assert.equal(cookies[nameInput], valueInput, 'не изменено значение cookie');
             assert.equal(listTable.children.length, 2, 'в таблице обнаружен дубль');
         });
 
@@ -170,7 +185,7 @@ describe('ДЗ 7.2 - Cookie editor', () => {
             });
 
             it('добавлять cookie в таблицу, только если значение cookie соответствует фильтру', () => {
-                let cookies;
+                let cookies, nameInput, valueInput;
 
                 addNameInput.value = 'test-cookie-name-1';
                 addValueInput.value = 'test-cookie-value-1';
@@ -184,18 +199,18 @@ describe('ДЗ 7.2 - Cookie editor', () => {
                 filterNameInput.dispatchEvent(new KeyboardEvent('keyup'));
                 assert.equal(listTable.children.length, 1);
 
-                addNameInput.value = 'test-cookie-name-3';
-                addValueInput.value = 'test-cookie-more-value-2';
+                addNameInput.value = nameInput = 'test-cookie-name-3';
+                addValueInput.value = valueInput = 'test-cookie-more-value-2';
                 addButton.click();
 
                 cookies = getCookies();
-                assert(cookies.hasOwnProperty(addNameInput.value), 'должна быть добавлена в браузер');
-                assert.equal(cookies[addNameInput.value], addValueInput.value, 'должна быть добавлена в браузер');
+                assert(cookies.hasOwnProperty(nameInput), 'должна быть добавлена в браузер');
+                assert.equal(cookies[nameInput], valueInput, 'должна быть добавлена в браузер');
                 assert.equal(listTable.children.length, 2, 'должна быть в таблице т.к. соответствует фильтру');
             });
 
             it('не добавлять cookie в таблицу, если значение cookie не соответствует фильтру', () => {
-                let cookies;
+                let cookies, nameInput, valueInput;
 
                 addNameInput.value = 'test-cookie-name-1';
                 addValueInput.value = 'test-cookie-value-1';
@@ -209,18 +224,18 @@ describe('ДЗ 7.2 - Cookie editor', () => {
                 filterNameInput.dispatchEvent(new KeyboardEvent('keyup'));
                 assert.equal(listTable.children.length, 1);
 
-                addNameInput.value = 'test-cookie-name-3';
-                addValueInput.value = 'test-cookie-value-3';
+                addNameInput.value = nameInput = 'test-cookie-name-3';
+                addValueInput.value = valueInput = 'test-cookie-value-3';
                 addButton.click();
 
                 cookies = getCookies();
-                assert(cookies.hasOwnProperty(addNameInput.value), 'должна быть добавлена в браузер');
-                assert.equal(cookies[addNameInput.value], addValueInput.value, 'должна быть добавлена в браузер');
+                assert(cookies.hasOwnProperty(nameInput), 'должна быть добавлена в браузер');
+                assert.equal(cookies[nameInput], valueInput, 'должна быть добавлена в браузер');
                 assert.equal(listTable.children.length, 1, 'не должна быть в таблице т.к. не соответствует фильтру');
             });
 
             it('удалить cookie из табилицы, если ее значение перестало соответствовать фильтр', () => {
-                let cookies;
+                let cookies, nameInput, valueInput;
 
                 addNameInput.value = 'test-cookie-name-1';
                 addValueInput.value = 'test-cookie-value-1';
@@ -238,13 +253,13 @@ describe('ДЗ 7.2 - Cookie editor', () => {
                 filterNameInput.dispatchEvent(new KeyboardEvent('keyup'));
                 assert.equal(listTable.children.length, 2);
 
-                addNameInput.value = 'test-cookie-name-3';
-                addValueInput.value = 'test-cookie-value-3';
+                addNameInput.value = nameInput = 'test-cookie-name-3';
+                addValueInput.value = valueInput = 'test-cookie-value-3';
                 addButton.click();
 
                 cookies = getCookies();
-                assert(cookies.hasOwnProperty(addNameInput.value), 'должна оставться в браузере');
-                assert.equal(cookies[addNameInput.value], addValueInput.value, 'значение в браузере должно измениться');
+                assert(cookies.hasOwnProperty(nameInput), 'должна оставться в браузере');
+                assert.equal(cookies[nameInput], valueInput, 'значение в браузере должно измениться');
                 assert.equal(listTable.children.length, 1, 'уже не соответствует фильтру и не должна быть в таблице');
             });
 
