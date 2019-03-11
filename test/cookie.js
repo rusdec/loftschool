@@ -37,7 +37,7 @@ describe('ДЗ 7.2 - Cookie editor', () => {
             }
         });
 
-        it('значение addNameInput и addValueInput должны сбрасываться после клика на кнопку "Добавить"', () => {
+        it('значения addNameInput и addValueInput должны сбрасываться после клика на кнопку "Добавить"', () => {
             filterNameInput = homeworkContainer.querySelector('#filter-name-input');
             addNameInput = homeworkContainer.querySelector('#add-name-input');
             addValueInput = homeworkContainer.querySelector('#add-value-input');
@@ -52,7 +52,7 @@ describe('ДЗ 7.2 - Cookie editor', () => {
             assert(addValueInput.value === '', 'value элемента addValueInput должно сбрасываться');
         });
 
-        it('на старнице должны быть элементы с нужными id', () => {
+        it('на странице должны быть элементы с нужными id', () => {
             filterNameInput = homeworkContainer.querySelector('#filter-name-input');
             addNameInput = homeworkContainer.querySelector('#add-name-input');
             addValueInput = homeworkContainer.querySelector('#add-value-input');
@@ -83,8 +83,8 @@ describe('ДЗ 7.2 - Cookie editor', () => {
             assert.equal(cookies[nameInput], valueInput, 'cookie не добавлена в барузер');
             assert.equal(listTable.children.length, 1, 'cookie не добавлена в таблицу');
 
-            addNameInput.value = 'test-cookie-name-2';
-            addValueInput.value = 'test-cookie-value-2';
+            addNameInput.value = nameInput = 'test-cookie-name-2';
+            addValueInput.value = valueInput = 'test-cookie-value-2';
             addButton.click();
 
             cookies = getCookies();
