@@ -1,7 +1,7 @@
 const HtmlPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const rules = require('./webpack.config.rules');
+const rules = require('./webpack.config.rules')();
 const fs = require('fs');
 const path = require('path');
 
@@ -22,7 +22,6 @@ const files = fs.readdirSync(root)
     }, { '.js': [], '.hbs': [] });
 const entries = files['.js'].reduce((all, { name, absPath }) => {
     all[name] = absPath;
-
     return all;
 }, {});
 const html = files['.hbs']
@@ -38,9 +37,9 @@ const html = files['.hbs']
 
 if (!html.length || !files['.hbs'].find(file => file.name === 'index')) {
     html.push(new HtmlPlugin({
-        title: 'index',
-        template: 'index.hbs',
-        chunks: ['index']
+        title: 'Cookie editor',
+        template: 'src/cookie.hbs',
+        chunks: ['cookie']
     }));
 }
 
